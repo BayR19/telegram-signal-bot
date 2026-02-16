@@ -1,5 +1,5 @@
 import os
-import time
+import asyncio
 import requests
 from telegram import Bot
 
@@ -17,12 +17,14 @@ def get_price(symbol: str):
         raise Exception(data)
     return float(data["data"]["price"])
 
-def main():
+async def main():
     if not TOKEN or not CHAT_ID:
         raise RuntimeError("BOT_TOKEN ve CHAT_ID Railway Variables içinde olmalı.")
 
     bot = Bot(token=TOKEN)
-    bot.send_message(chat_id=CHAT_ID, text="✅ Bot çalıştı.")
+    chat_id = int(CHAT_ID)  # string geliyorsa garanti olsun
+
+    await bot.send_message(chat_id=chat_id, text="✅ Bot çalıştı.")
 
     while True:
         lines = []
@@ -30,10 +32,10 @@ def main():
             try:
                 p = get_price(c)
                 lines.append(f"{c}: {p}")
-            except Exception as e:
+            except Exception:
                 lines.append(f"{c}: hata")
-        bot.send_message(chat_id=CHAT_ID, text="📈\n" + "\n".join(lines))
-        time.sleep(INTERVAL)
+        await bot.send_message(chat_id=chat_id, text="📈\n" + "\n".join(lines))
+        await asyncio.sleep(INTERVAL)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
