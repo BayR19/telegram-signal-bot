@@ -24,7 +24,7 @@ async def main():
     bot = Bot(token=TOKEN)
     chat_id = int(CHAT_ID)  # string geliyorsa garanti olsun
 
-    await bot.send_message(chat_id=chat_id, text="✅ Bot çalıştı.")
+    # await bot.send_message(chat_id=chat_id, text="✅ Bot çalıştı.")
 
     while True:
         lines = []
